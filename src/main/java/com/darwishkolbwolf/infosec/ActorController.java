@@ -47,6 +47,8 @@ public class ActorController implements Initializable {
 
     private ObservableList<Actor> actorsObservableList = FXCollections.observableArrayList();
 
+    private final static String sqlAll = "SELECT * FROM actor LIMIT 10;";
+
     @FXML
     public void search() {
         String lastName = lastNameTextField.getText();
@@ -93,6 +95,8 @@ public class ActorController implements Initializable {
                 myPreparedStatement = App.connection.prepareStatement(sqlFullNameSearch);
                 myPreparedStatement.setString(1, firstName);
                 myPreparedStatement.setString(2, lastName);
+            } else if (firstName.isBlank() && lastName.isBlank()) {
+                myPreparedStatement = App.connection.prepareStatement(sqlAll);
             }
 
             ResultSet resultSet = myPreparedStatement.executeQuery();
@@ -131,6 +135,9 @@ public class ActorController implements Initializable {
             } else if (!firstName.isBlank() && lastName.isBlank()) {
                 myStatement = App.connection.createStatement();
                 resultSet = myStatement.executeQuery(sqlFirstNameSearch + "'" + firstName + "'");
+            } else if (firstName.isBlank() && lastName.isBlank()) {
+                myStatement = App.connection.createStatement();
+                resultSet = myStatement.executeQuery(sqlAll);
             }
 
             while (resultSet.next()) {
